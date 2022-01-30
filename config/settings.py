@@ -34,7 +34,7 @@ BASE_BACKEND_URL = env.str("DJANGO_BASE_BACKEND_URL", default="http://localhost:
 BASE_FRONTEND_URL = env.str("DJANGO_BASE_FRONTEND_URL", default="http://localhost:8081")
 
 ALLOWED_HOSTS = env.list(
-    "DJANGO_ALLOWED_HOSTS", default=["localhost", ".herokuapp.com"]
+    "DJANGO_ALLOWED_HOSTS", default=["localhost", ".herokuapp.com", "auth.achilio.com"]
 )
 
 # Application definition

@@ -1,0 +1,17 @@
+version: "3.1"
+
+services:
+  web:
+    image: mvm-auth
+    build: .
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      - DJANGO_GOOGLE_OAUTH2_CLIENT_ID=293325499254-8h7bv5piflnjdoufjak8jjh03tpqss8b.apps.googleusercontent.com
+      - DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET=OZeUkdunGSTQ7ZyvM7oDtabD
+      - DJANGO_SECRET_KEY=secret
+      #- DJANGO_BASE_BACKEND_URL="http://auth.achilio.com"
+      #- DJANGO_BASE_FRONTEND_URL="https://app.achilio.com"
+    volumes:
+      - .:/app
