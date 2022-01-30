@@ -1,0 +1,39 @@
+insecureskipverify = true
+
+logLevel = "INFO"
+
+defaultEntryPoints = ["http", "https"]
+
+# Entrypoints, http and https
+[entryPoints]
+  # http should be redirected to https
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  # https is the default
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "nicoboss.me"
+watch = true
+exposedbydefault = false
+
+[acme]
+email = "nico@nicoboss.me"
+storage = "acme.json"
+entryPoint = "https"
+  [acme.httpChallenge]
+    delayBeforeCheck = 30
+
+#[[acme.domains]]
+#  main = "*.nicoboss.me"
+#  sans = ["nicoboss.me"]
+#[[acme.domains]]
+#  main = "*.theprinsight.eu"
+#  sans = ["theprinsight.eu"]
