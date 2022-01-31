@@ -8,17 +8,10 @@ from utils import get_now
 from users.models import User
 
 
-def user_create(
-    email, access_token, refresh_token, password=None, **extra_fields
-) -> User:
+def user_create(email, password=None, **extra_fields) -> User:
     extra_fields = {"is_staff": False, "is_superuser": False, **extra_fields}
 
-    user = User(
-        email=email,
-        access_token=access_token,
-        refresh_token=refresh_token,
-        **extra_fields
-    )
+    user = User(email=email, **extra_fields)
 
     if password:
         user.set_password(password)
@@ -27,6 +20,22 @@ def user_create(
 
     user.full_clean()
     user.save()
+
+    return user
+
+
+def user_update(user: User, **extra_data) -> User:
+    user = user_update_access_token(
+        user=user, new_access_token=extra_data["access_token"]
+    )
+    user = user_update_refresh_token(
+        user=user, new_refresh_token=extra_data["refresh_token"]
+    )
+    user = user_update_name(
+        user=user,
+        new_first_name=extra_data["first_name"],
+        new_last_name=extra_data["last_name"],
+    )
 
     return user
 
@@ -56,8 +65,25 @@ def user_change_secret_key(*, user: User) -> User:
 
 
 @transaction.atomic
-def user_change_access_token(*, user: User, new_access_token: str) -> User:
+def user_update_access_token(*, user: User, new_access_token: str) -> User:
     user.access_token = new_access_token
+    user.full_clean()
+    user.save()
+
+    return user
+
+
+def user_update_refresh_token(*, user: User, new_refresh_token: str) -> User:
+    user.refresh_token = new_refresh_token
+    user.full_clean()
+    user.save()
+
+    return user
+
+
+def user_update_name(*, user: User, new_first_name: str, new_last_name: str) -> User:
+    user.first_name = new_first_name
+    user.last_name = new_last_name
     user.full_clean()
     user.save()
 

@@ -11,7 +11,12 @@ from django.shortcuts import redirect
 
 from api.mixins import ApiErrorsMixin, PublicApiMixin, ApiAuthMixin
 
-from users.services import user_record_login, user_change_secret_key, user_get_or_create
+from users.services import (
+    user_record_login,
+    user_change_secret_key,
+    user_get_or_create,
+    user_update,
+)
 
 from auth.services import (
     jwt_login,
@@ -73,7 +78,9 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
 
         # We use get-or-create logic here for the sake of the example.
         # We don't have a sign-up flow.
-        user, _ = user_get_or_create(**profile_data)
+        user, created = user_get_or_create(**profile_data)
+        if not created:
+            user_update(user, **profile_data)
 
         response = redirect(settings.BASE_FRONTEND_URL + f"/login")
         response = jwt_login(response=response, user=user)
