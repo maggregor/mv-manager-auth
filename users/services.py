@@ -24,6 +24,11 @@ def user_create(email, password=None, **extra_fields) -> User:
     return user
 
 
+def user_get(email) -> User:
+    user = User.objects.filter(email=email).first()
+    return user
+
+
 def user_update(user: User, **extra_data) -> User:
     user = user_update_access_token(
         user=user, new_access_token=extra_data["access_token"]

@@ -1,7 +1,9 @@
+from http.client import NOT_FOUND
 from django.forms import ValidationError
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_api_key.permissions import HasAPIKey
 
 from api.mixins import ApiErrorsMixin, ApiAuthMixin, PublicApiMixin
 
@@ -13,8 +15,38 @@ from auth.services import (
 )
 from users.models import User
 
-from users.services import user_update_access_token, user_get_or_create
-from users.selectors import user_get_me
+from users.services import user_update_access_token, user_get_or_create, user_get
+from users.selectors import user_get_detail, user_get_all
+
+
+class UserListApi(ApiAuthMixin, ApiErrorsMixin, APIView):
+    permission_classes = [HasAPIKey]
+
+    def get(self, request, *args, **kwargs):
+        return Response(user_get_all())
+
+
+class UserAccessTokenApi(ApiAuthMixin, ApiErrorsMixin, APIView):
+    permission_classes = [HasAPIKey]
+
+    class InputSerializer(serializers.Serializer):
+        email = serializers.EmailField()
+
+    def post(self, request, *args, **kwargs):
+
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = user_get(**serializer.validated_data)
+        if not user:
+            return Response(status=NOT_FOUND)
+
+        new_access_token = google_get_access_token_from_refresh(
+            refresh_token=user.refresh_token
+        )
+        user_update_access_token(user=user, new_access_token=new_access_token)
+
+        return Response(data=user_get_detail(user=user))
 
 
 class UserMeApi(ApiAuthMixin, ApiErrorsMixin, APIView):
@@ -29,7 +61,7 @@ class UserMeApi(ApiAuthMixin, ApiErrorsMixin, APIView):
             )
             user_update_access_token(user=user, new_access_token=new_access_token)
 
-        return Response(user_get_me(user=user))
+        return Response(user_get_detail(user=user))
 
 
 class UserInitApi(PublicApiMixin, ApiErrorsMixin, APIView):
@@ -49,7 +81,7 @@ class UserInitApi(PublicApiMixin, ApiErrorsMixin, APIView):
         # We don't have a sign-up flow.
         user, _ = user_get_or_create(**serializer.validated_data)
 
-        response = Response(data=user_get_me(user=user))
+        response = Response(data=user_get_detail(user=user))
         response = jwt_login(response=response, user=user)
 
         return response
