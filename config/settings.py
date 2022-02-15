@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import datetime
+import os
 import environ
 
 from pathlib import Path
@@ -139,9 +140,12 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_URL = "/static/"
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+if DEBUG != 1:
+    STATIC_URL = '/staticfiles/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    STATIC_URL = '/static/'
 
 # Custom user model
 AUTH_USER_MODEL = "users.User"
