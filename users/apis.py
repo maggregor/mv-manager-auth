@@ -19,18 +19,14 @@ from users.services import user_update_access_token, user_get_or_create, user_ge
 from users.selectors import user_get_detail, user_get_all
 
 
-class UserListApi(ApiAuthMixin, ApiErrorsMixin, APIView):
-    permission_classes = [HasAPIKey]
-
-    def get(self, request, *args, **kwargs):
-        return Response(user_get_all())
-
-
-class UserAccessTokenApi(ApiAuthMixin, ApiErrorsMixin, APIView):
+class UserApi(ApiAuthMixin, ApiErrorsMixin, APIView):
     permission_classes = [HasAPIKey]
 
     class InputSerializer(serializers.Serializer):
         email = serializers.EmailField()
+
+    def get(self, request, *args, **kwargs):
+        return Response(user_get_all())
 
     def post(self, request, *args, **kwargs):
 
