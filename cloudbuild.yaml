@@ -57,9 +57,11 @@ steps:
         "${_REGION}",
         "--platform",
         "managed",
+        "--allow-unauthenticated"
         "--ingress",
         "internal",
-        "--service-account=auth-cloudrun@achilio-dev.iam.gserviceaccount.com",
+        "--service-account",
+        "auth-cloudrun@achilio-dev.iam.gserviceaccount.com",
       ]
 substitutions:
   _ENV: dev
