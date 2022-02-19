@@ -72,7 +72,7 @@ substitutions:
   _REGION: europe-west1
   _SERVICE_NAME: mvm-auth
   _SECRET_SETTINGS_NAME: django_settings
-  _DEBUG: 0
+  _DEBUG: "0"
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
