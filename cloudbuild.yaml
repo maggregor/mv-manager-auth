@@ -59,7 +59,6 @@ steps:
         "managed",
         "--ingress",
         "internal",
-        "--no-allow-unauthenticated",
         "--service-account=auth-cloudrun@achilio-dev.iam.gserviceaccount.com",
       ]
 substitutions:
