@@ -58,7 +58,7 @@ steps:
         "--platform",
         "managed",
         "--add-cloudsql-instances",
-        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}"
+        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
         "--allow-unauthenticated",
         "--ingress",
         "all",
