@@ -183,22 +183,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-if DEBUG != 1:
-    # Static files (CSS, JavaScript, Images)
-    # [START cloudrun_django_static_config]
-    # Define static storage via django-storages[google]
-    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-    STATIC_URL = "/static/"
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    GS_DEFAULT_ACL = "publicRead"
-    # [END cloudrun_django_static_config]
-else:
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# [START cloudrun_django_static_config]
+# Define static storage via django-storages[google]
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+STATIC_URL = "/static/"
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_DEFAULT_ACL = "publicRead"
+# [END cloudrun_django_static_config]
 
 # Custom user model
 AUTH_USER_MODEL = "users.User"
