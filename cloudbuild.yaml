@@ -64,6 +64,7 @@ steps:
         "all",
         "--service-account",
         "auth-cloudrun@${PROJECT_ID}.iam.gserviceaccount.com",
+        "--set-env-vars=DEBUG=${_DEBUG}",
       ]
 substitutions:
   _ENV: dev
@@ -71,6 +72,7 @@ substitutions:
   _REGION: europe-west1
   _SERVICE_NAME: mvm-auth
   _SECRET_SETTINGS_NAME: django_settings
+  _DEBUG: 0
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
