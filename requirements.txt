@@ -30,3 +30,5 @@ urllib3==1.26.8
 whitenoise==5.2.0
 zipp==3.4.1
 djangorestframework-api-key==2.1.0
+google-cloud-secret-manager==2.8.0
+django-storages[google]==1.12.3

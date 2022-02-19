@@ -44,7 +44,7 @@ def user_update(user: User, **extra_data) -> User:
 
     return user
 
-
+@transaction.atomic
 def user_create_superuser(email, password=None, **extra_fields) -> User:
     extra_fields = {**extra_fields, "is_staff": True, "is_superuser": True}
 
