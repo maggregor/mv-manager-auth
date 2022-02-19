@@ -196,7 +196,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-if DEBUG == 1:
+if DEBUG != 1:
     # Static files (CSS, JavaScript, Images)
     # [START cloudrun_django_static_config]
     # Define static storage via django-storages[google]

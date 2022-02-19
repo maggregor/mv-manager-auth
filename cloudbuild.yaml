@@ -42,10 +42,29 @@ steps:
         "2",
         "--no-input",
       ]
-
+  # Deploy container image to Cloud Run
+  - id: "deploy cloud run"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "${_SERVICE_NAME}",
+        "--image",
+        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}",
+        "--region",
+        "${_REGION}",
+        "--platform",
+        "managed",
+        "--ingress",
+        "internal",
+        "--no-allow-unauthenticated",
+        "--service-account=auth-cloudrun@achilio-dev.iam.gserviceaccount.com",
+      ]
 substitutions:
   _ENV: dev
-  _INSTANCE_NAME: achilio-${_ENV}-db-instance
+  _INSTANCE_NAME: ${PROJECT_ID}-db-instance
   _REGION: europe-west1
   _SERVICE_NAME: mvm-auth
   _SECRET_SETTINGS_NAME: django_settings
