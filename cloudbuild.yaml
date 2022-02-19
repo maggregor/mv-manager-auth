@@ -57,7 +57,7 @@ steps:
         "${_REGION}",
         "--platform",
         "managed",
-        "--allow-unauthenticated"
+        "--allow-unauthenticated",
         "--ingress",
         "all",
         "--service-account",
