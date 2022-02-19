@@ -59,7 +59,7 @@ steps:
         "managed",
         "--allow-unauthenticated"
         "--ingress",
-        "internal",
+        "all",
         "--service-account",
         "auth-cloudrun@achilio-dev.iam.gserviceaccount.com",
       ]
