@@ -19,3 +19,5 @@ tests/report/
 *.sqlite3
 .env
 .venv
+*.sqlite
+*.bak
