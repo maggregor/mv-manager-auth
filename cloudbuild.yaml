@@ -65,6 +65,7 @@ steps:
         "--service-account",
         "auth-cloudrun@${PROJECT_ID}.iam.gserviceaccount.com",
         "--set-env-vars=DEBUG=${_DEBUG}",
+        "--min-instances=1",
       ]
 substitutions:
   _ENV: dev
