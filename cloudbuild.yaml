@@ -77,4 +77,3 @@ substitutions:
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
-# [END cloudrun_django_cloudmigrate]
