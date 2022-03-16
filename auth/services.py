@@ -64,7 +64,6 @@ def google_get_access_token_from_code(*, code: str, redirect_uri: str) -> str:
     if not response.ok:
         raise ValidationError("Failed to obtain access token from Google.")
 
-    print(response.json())
     access_token = response.json()["access_token"]
     refresh_token = response.json()["refresh_token"]
 
