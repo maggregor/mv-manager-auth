@@ -74,6 +74,7 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
             "access_token": access_token,
             "first_name": user_data.get("given_name", ""),
             "last_name": user_data.get("family_name", ""),
+            "picture": user_data.get("picture", "")
         }
 
         # We use get-or-create logic here for the sake of the example.

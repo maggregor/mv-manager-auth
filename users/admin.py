@@ -9,7 +9,7 @@ from users.models import User
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     fieldsets = (
-        (None, {"fields": ("email", "password", "refresh_token", "access_token")}),
+        (None, {"fields": ("email", "password", "refresh_token", "access_token", "picture")}),
         (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),
