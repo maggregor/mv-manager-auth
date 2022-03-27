@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from api.mixins import ApiErrorsMixin, PublicApiMixin, ApiAuthMixin
 
 from users.services import (
+    team_get_or_create,
     user_record_login,
     user_change_secret_key,
     user_get_or_create,
@@ -68,13 +69,21 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
 
         user_data = google_get_user_info(access_token=access_token)
 
+        team_data = {
+            "name": user_data.get("hd", user_data["email"]),
+            "owner_email": user_data["email"],
+        }
+
+        team, created = team_get_or_create(**team_data)
+
         profile_data = {
             "email": user_data["email"],
             "refresh_token": refresh_token,
             "access_token": access_token,
             "first_name": user_data.get("given_name", ""),
             "last_name": user_data.get("family_name", ""),
-            "picture": user_data.get("picture", "")
+            "picture": user_data.get("picture", ""),
+            "team": team,
         }
 
         # We use get-or-create logic here for the sake of the example.
