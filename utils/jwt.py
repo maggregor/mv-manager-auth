@@ -1,7 +1,6 @@
 from calendar import timegm
 from datetime import datetime
 import uuid
-from django.conf import settings
 from rest_framework_jwt.settings import api_settings
 
 from users.models import User
@@ -33,6 +32,7 @@ def jwt_create_payload(user: User):
         "last_name": user.last_name,
         "name": user.name,
         "picture": user.picture,
+        "hd": user.team.name,
         "iat": unix_epoch(issued_at_time),
         "exp": expiration_time,
     }

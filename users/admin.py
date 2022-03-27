@@ -3,13 +3,38 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from django.utils.translation import gettext_lazy as _
 
-from users.models import User
+from users.models import Team, User
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            None,
+            {"fields": ("name", "owner_email")},
+        ),
+    )
+    ordering = ("name",)
+    list_display = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     fieldsets = (
-        (None, {"fields": ("email", "password", "refresh_token", "access_token", "picture")}),
+        (
+            None,
+            {
+                "fields": (
+                    "email",
+                    "password",
+                    "refresh_token",
+                    "access_token",
+                    "picture",
+                    "team",
+                )
+            },
+        ),
         (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),

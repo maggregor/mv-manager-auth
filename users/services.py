@@ -5,7 +5,7 @@ from django.core.management.utils import get_random_secret_key
 
 from utils import get_now
 
-from users.models import User
+from users.models import Team, User
 
 
 def user_create(email, password=None, **extra_fields) -> User:
@@ -35,11 +35,12 @@ def user_update(user: User, **extra_data) -> User:
     user.access_token = extra_data["access_token"]
     user.refresh_token = extra_data["refresh_token"]
     user.picture = extra_data["picture"]
+    user.team = extra_data["team"]
     user.full_clean()
     user.save()
 
-
     return user
+
 
 @transaction.atomic
 def user_create_superuser(email, password=None, **extra_fields) -> User:
@@ -83,19 +84,6 @@ def user_update_refresh_token(*, user: User, new_refresh_token: str) -> User:
     return user
 
 
-def user_update_name(*, user: User, new_first_name: str, new_last_name: str) -> User:
-    user.first_name = new_first_name
-    user.last_name = new_last_name
-    user.full_clean()
-    user.save()
-
-    return user
-
-def user_update_picture(*, user: User, new_picture: str) -> User:
-    user.picture = new_picture
-    user.full_clean()
-    user.save()
-
 @transaction.atomic
 def user_get_or_create(*, email: str, **extra_data) -> Tuple[User, bool]:
     user = User.objects.filter(email=email).first()
@@ -104,3 +92,20 @@ def user_get_or_create(*, email: str, **extra_data) -> Tuple[User, bool]:
         return user, False
 
     return user_create(email=email, **extra_data), True
+
+
+@transaction.atomic
+def team_get_or_create(*, name: str, **extra_data) -> Tuple[Team, bool]:
+    team = Team.objects.filter(name=name).first()
+    if team:
+        return team, False
+    return team_create(name=name, **extra_data), True
+
+
+@transaction.atomic
+def team_create(*, name: str, **extra_fields) -> Team:
+    team = Team(name=name, **extra_fields)
+    team.full_clean()
+    team.save()
+
+    return team
