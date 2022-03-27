@@ -21,3 +21,4 @@ tests/report/
 .venv
 *.sqlite
 *.bak
+local_scripts/
