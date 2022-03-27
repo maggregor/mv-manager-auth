@@ -7,8 +7,9 @@ class User(AbstractUser):
     username = None
 
     email = models.EmailField(unique=True, db_index=True)
-    refresh_token = models.CharField(max_length=255)
-    access_token = models.CharField(max_length=2048)
+    refresh_token = models.CharField(max_length=255, null=True, blank=True)
+    access_token = models.CharField(max_length=2048, null=True, blank=True)
+    picture = models.CharField(max_length=2048, null=True, blank=True)
     secret_key = models.CharField(max_length=255, default=get_random_secret_key)
 
     USERNAME_FIELD = "email"

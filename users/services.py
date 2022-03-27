@@ -30,17 +30,14 @@ def user_get(email) -> User:
 
 
 def user_update(user: User, **extra_data) -> User:
-    user = user_update_access_token(
-        user=user, new_access_token=extra_data["access_token"]
-    )
-    user = user_update_refresh_token(
-        user=user, new_refresh_token=extra_data["refresh_token"]
-    )
-    user = user_update_name(
-        user=user,
-        new_first_name=extra_data["first_name"],
-        new_last_name=extra_data["last_name"],
-    )
+    user.first_name = extra_data["first_name"]
+    user.last_name = extra_data["last_name"]
+    user.access_token = extra_data["access_token"]
+    user.refresh_token = extra_data["refresh_token"]
+    user.picture = extra_data["picture"]
+    user.full_clean()
+    user.save()
+
 
     return user
 
@@ -94,6 +91,10 @@ def user_update_name(*, user: User, new_first_name: str, new_last_name: str) -> 
 
     return user
 
+def user_update_picture(*, user: User, new_picture: str) -> User:
+    user.picture = new_picture
+    user.full_clean()
+    user.save()
 
 @transaction.atomic
 def user_get_or_create(*, email: str, **extra_data) -> Tuple[User, bool]:
