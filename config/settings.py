@@ -60,11 +60,9 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 
-
 # env = environ.Env(DEBUG=(int, 0))
 # # reading .env file
 # environ.Env.read_env(".env")
-
 
 
 # # SECURITY WARNING: keep the secret key used in production secret!
@@ -83,7 +81,7 @@ ALLOWED_HOSTS = env.list(
         ".herokuapp.com",
         "auth.achilio.com",
         "beta.auth.achilio.com",
-        "dev.auth.achilio.com"
+        "dev.auth.achilio.com",
     ],
 )
 
@@ -104,7 +102,7 @@ INSTALLED_APPS = [
     "rest_framework_jwt.blacklist",
     "rest_framework_api_key",
     "users",
-    "storages"
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -207,7 +205,7 @@ JWT_AUTH = {
         )
     ),
     "JWT_AUTH_HEADER_PREFIX": "JWT",
-    "JWT_GET_USER_SECRET_KEY": lambda user: user.secret_key,
+    # "JWT_GET_USER_SECRET_KEY": lambda user: user.secret_key,
     "JWT_RESPONSE_PAYLOAD_HANDLER": "users.selectors.jwt_response_payload_handler",
     "JWT_PAYLOAD_HANDLER": "utils.jwt.jwt_create_payload",
     "JWT_AUTH_COOKIE": "jwt_token",
