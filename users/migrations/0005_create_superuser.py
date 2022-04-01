@@ -13,6 +13,7 @@ from users.services import user_create_superuser
 import google.auth
 from google.cloud import secretmanager
 
+
 def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> None:
     """
     Dynamically create an admin user as part of a migration
@@ -36,17 +37,17 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
 
     # Create a new user using acquired password, stripping any accidentally stored newline characters
     user_create_superuser(
-    email='admin@achilio.com',
-    password=admin_password.strip(),
-    access_token="none",
-    refresh_token="none"
-)
+        email="admin@achilio.com",
+        password=admin_password.strip(),
+        access_token="none",
+        refresh_token="none",
+    )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_user_access_token'),
+        ("users", "0010_team_owner_email"),
     ]
 
     operations = [migrations.RunPython(createsuperuser)]
