@@ -7,6 +7,8 @@ from django.core.management.utils import get_random_secret_key
 class Team(models.Model):
     name = models.CharField(max_length=255, unique=True)
     owner_email = models.EmailField()
+    stripe_customer_id = models.CharField(max_length=255, unique=True)
+    stripe_subscription_id = models.CharField(max_length=255, unique=True)
 
     def __str__(self) -> str:
         return self.name

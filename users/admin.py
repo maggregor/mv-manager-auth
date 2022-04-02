@@ -11,7 +11,14 @@ class TeamAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             None,
-            {"fields": ("name", "owner_email")},
+            {
+                "fields": (
+                    "name",
+                    "owner_email",
+                    "stripe_customer_id",
+                    "stripe_subscription_id",
+                )
+            },
         ),
     )
     ordering = ("name",)
