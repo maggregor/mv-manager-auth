@@ -22,7 +22,7 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
     if os.getenv("TRAMPOLINE_CI", None):
         # We are in CI, so just create a placeholder user for unit testing.
         admin_password = "test"
-    else:
+    elif os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
         client = secretmanager.SecretManagerServiceClient()
 
         # Get project value for identifying current context
@@ -34,6 +34,8 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
         admin_password = client.access_secret_version(name=name).payload.data.decode(
             "UTF-8"
         )
+    else:
+        admin_password = "admin"
 
     # Create a new user using acquired password, stripping any accidentally stored newline characters
     user_create_superuser(
@@ -47,7 +49,7 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("users", "0010_team_owner_email"),
+        ("users", "0008_auto_20220327_1135"),
     ]
 
     operations = [migrations.RunPython(createsuperuser)]

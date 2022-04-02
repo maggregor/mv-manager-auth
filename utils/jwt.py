@@ -33,6 +33,7 @@ def jwt_create_payload(user: User):
         "name": user.name,
         "picture": user.picture,
         "hd": user.team.name,
+        "customer_id": user.team.stripe_customer_id,
         "iat": unix_epoch(issued_at_time),
         "exp": expiration_time,
     }
