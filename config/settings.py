@@ -210,7 +210,7 @@ JWT_AUTH = {
     "JWT_PAYLOAD_HANDLER": "utils.jwt.jwt_create_payload",
     "JWT_AUTH_COOKIE": "jwt_token",
     "JWT_AUTH_COOKIE_SAMESITE": None,
-    "JWT_AUTH_COOKIE_DOMAIN": "achilio.com",
+    "JWT_AUTH_COOKIE_DOMAIN": env.str("DJANGO_JWT_AUTH_COOKIE_DOMAIN", None),
     "JWT_ISSUER": BASE_BACKEND_URL,
 }
 

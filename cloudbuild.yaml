@@ -63,7 +63,7 @@ steps:
         "all",
         "--service-account",
         "auth-cloudrun@${PROJECT_ID}.iam.gserviceaccount.com",
-        "--set-env-vars=DEBUG=${_DEBUG}",
+        "--set-env-vars=DEBUG=${_DEBUG},DJANGO_JWT_AUTH_COOKIE_DOMAIN=${_DJANGO_JWT_AUTH_COOKIE_DOMAIN}",
         "--min-instances=1",
       ]
 substitutions:
@@ -73,6 +73,7 @@ substitutions:
   _SERVICE_NAME: mvm-auth
   _SECRET_SETTINGS_NAME: django_settings
   _DEBUG: "0"
+  _DJANGO_JWT_AUTH_COOKIE_DOMAIN: "achilio.com"
 
 images:
   - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
