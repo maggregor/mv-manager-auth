@@ -120,7 +120,7 @@ def team_create(*, name: str, **extra_fields) -> Team:
     subscription = stripe.Subscription.create(
         customer=customer.stripe_id,
         items=[
-            {"price": "price_1Kj2GwKz3TV8XBbdksnRYyIM", "quantity": 0},
+            {"price": settings.STRIPE_DEFAULT_PRICING, "quantity": 0},
         ],
         trial_end=trial_end,
     )
