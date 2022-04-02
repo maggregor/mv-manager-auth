@@ -2,8 +2,12 @@ from typing import Tuple
 
 from django.db import transaction
 from django.core.management.utils import get_random_secret_key
+from config import settings
 
 from utils import get_now
+
+from datetime import datetime
+from datetime import timedelta
 
 from users.models import Team, User
 
@@ -104,7 +108,28 @@ def team_get_or_create(*, name: str, **extra_data) -> Tuple[Team, bool]:
 
 @transaction.atomic
 def team_create(*, name: str, **extra_fields) -> Team:
-    team = Team(name=name, **extra_fields)
+    import stripe
+
+    stripe.api_key = settings.STRIPE_API_KEY
+    customer = stripe.Customer.create(
+        description=f"Stripe customer representing Google organization {name}",
+        name=name,
+        email=extra_fields["owner_email"],
+    )
+    trial_end = int((datetime.now() + timedelta(days=14)).timestamp())
+    subscription = stripe.Subscription.create(
+        customer=customer.stripe_id,
+        items=[
+            {"price": "price_1Kj2GwKz3TV8XBbdksnRYyIM", "quantity": 0},
+        ],
+        trial_end=trial_end,
+    )
+    team = Team(
+        name=name,
+        owner_email=extra_fields["owner_email"],
+        stripe_customer_id=customer.stripe_id,
+        stripe_subscription_id=subscription.stripe_id,
+    )
     team.full_clean()
     team.save()
 

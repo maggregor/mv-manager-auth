@@ -31,11 +31,10 @@ env = environ.Env(DEBUG=(bool, True))
 env_file = os.path.join(BASE_DIR, ".env")
 
 # Attempt to load the Project ID into the environment, safely failing on error.
-if not os.path.isfile(env_file):
-    try:
-        _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-    except google.auth.exceptions.DefaultCredentialsError:
-        pass
+try:
+    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+except google.auth.exceptions.DefaultCredentialsError:
+    pass
 
 if os.path.isfile(env_file):
     # Use a local secret file, if provided
@@ -224,3 +223,6 @@ CORS_ORIGIN_WHITELIST = env.list(
 # Google OAuth2 settings
 GOOGLE_OAUTH2_CLIENT_ID = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_ID", "")
 GOOGLE_OAUTH2_CLIENT_SECRET = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET", "")
+
+# Stripe
+STRIPE_API_KEY = env.str("DJANGO_STRIPE_API_KEY", "")
