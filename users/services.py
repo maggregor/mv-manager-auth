@@ -116,13 +116,22 @@ def team_create(*, name: str, **extra_fields) -> Team:
         name=name,
         email=extra_fields["owner_email"],
     )
-    trial_end = int((datetime.now() + timedelta(days=14)).timestamp())
+    today = datetime.now()
+    # Trial ends 14 from now
+    trial_end = int((today + timedelta(days=14)).timestamp())
+    # Billing start the last day of current month
+    billing_cycle_anchor = int(
+        (
+            today.replace(month=today.month + 1).replace(day=1) - timedelta(days=1)
+        ).timestamp()
+    )
     subscription = stripe.Subscription.create(
         customer=customer.stripe_id,
         items=[
             {"price": settings.STRIPE_DEFAULT_PRICING, "quantity": 0},
         ],
         trial_end=trial_end,
+        billing_cycle_anchor=billing_cycle_anchor,
     )
     team = Team(
         name=name,
