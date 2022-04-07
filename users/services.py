@@ -2,10 +2,14 @@ from typing import Tuple
 
 from django.db import transaction
 from django.core.management.utils import get_random_secret_key
+from config import settings
 
 from utils import get_now
 
-from users.models import User
+from datetime import datetime
+from datetime import timedelta
+
+from users.models import Team, User
 
 
 def user_create(email, password=None, **extra_fields) -> User:
@@ -30,19 +34,17 @@ def user_get(email) -> User:
 
 
 def user_update(user: User, **extra_data) -> User:
-    user = user_update_access_token(
-        user=user, new_access_token=extra_data["access_token"]
-    )
-    user = user_update_refresh_token(
-        user=user, new_refresh_token=extra_data["refresh_token"]
-    )
-    user = user_update_name(
-        user=user,
-        new_first_name=extra_data["first_name"],
-        new_last_name=extra_data["last_name"],
-    )
+    user.first_name = extra_data["first_name"]
+    user.last_name = extra_data["last_name"]
+    user.access_token = extra_data["access_token"]
+    user.refresh_token = extra_data["refresh_token"]
+    user.picture = extra_data["picture"]
+    user.team = extra_data["team"]
+    user.full_clean()
+    user.save()
 
     return user
+
 
 @transaction.atomic
 def user_create_superuser(email, password=None, **extra_fields) -> User:
@@ -86,15 +88,6 @@ def user_update_refresh_token(*, user: User, new_refresh_token: str) -> User:
     return user
 
 
-def user_update_name(*, user: User, new_first_name: str, new_last_name: str) -> User:
-    user.first_name = new_first_name
-    user.last_name = new_last_name
-    user.full_clean()
-    user.save()
-
-    return user
-
-
 @transaction.atomic
 def user_get_or_create(*, email: str, **extra_data) -> Tuple[User, bool]:
     user = User.objects.filter(email=email).first()
@@ -103,3 +96,50 @@ def user_get_or_create(*, email: str, **extra_data) -> Tuple[User, bool]:
         return user, False
 
     return user_create(email=email, **extra_data), True
+
+
+@transaction.atomic
+def team_get_or_create(*, name: str, **extra_data) -> Tuple[Team, bool]:
+    team = Team.objects.filter(name=name).first()
+    if team:
+        return team, False
+    return team_create(name=name, **extra_data), True
+
+
+@transaction.atomic
+def team_create(*, name: str, **extra_fields) -> Team:
+    import stripe
+
+    stripe.api_key = settings.STRIPE_API_KEY
+    customer = stripe.Customer.create(
+        description=f"Stripe customer representing Google organization {name}",
+        name=name,
+        email=extra_fields["owner_email"],
+    )
+    today = datetime.now()
+    # Trial ends 14 from now
+    trial_end = int((today + timedelta(days=14)).timestamp())
+    # Billing start the last day of current month
+    billing_cycle_anchor = int(
+        (
+            today.replace(month=today.month + 1).replace(day=1) - timedelta(days=1)
+        ).timestamp()
+    )
+    subscription = stripe.Subscription.create(
+        customer=customer.stripe_id,
+        items=[
+            {"price": settings.STRIPE_DEFAULT_PRICING, "quantity": 0},
+        ],
+        trial_end=trial_end,
+        billing_cycle_anchor=billing_cycle_anchor,
+    )
+    team = Team(
+        name=name,
+        owner_email=extra_fields["owner_email"],
+        stripe_customer_id=customer.stripe_id,
+        stripe_subscription_id=subscription.stripe_id,
+    )
+    team.full_clean()
+    team.save()
+
+    return team

@@ -21,7 +21,7 @@ def user_get_detail(*, user: User) -> dict:
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name,
-        "access_token": user.access_token,
+        "team_name": user.team.name,
     }
 
 

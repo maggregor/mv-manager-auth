@@ -60,11 +60,9 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 
-
 # env = environ.Env(DEBUG=(int, 0))
 # # reading .env file
 # environ.Env.read_env(".env")
-
 
 
 # # SECURITY WARNING: keep the secret key used in production secret!
@@ -83,7 +81,7 @@ ALLOWED_HOSTS = env.list(
         ".herokuapp.com",
         "auth.achilio.com",
         "beta.auth.achilio.com",
-        "dev.auth.achilio.com"
+        "dev.auth.achilio.com",
     ],
 )
 
@@ -104,7 +102,7 @@ INSTALLED_APPS = [
     "rest_framework_jwt.blacklist",
     "rest_framework_api_key",
     "users",
-    "storages"
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -207,10 +205,13 @@ JWT_AUTH = {
         )
     ),
     "JWT_AUTH_HEADER_PREFIX": "JWT",
-    "JWT_GET_USER_SECRET_KEY": lambda user: user.secret_key,
+    # "JWT_GET_USER_SECRET_KEY": lambda user: user.secret_key,
     "JWT_RESPONSE_PAYLOAD_HANDLER": "users.selectors.jwt_response_payload_handler",
+    "JWT_PAYLOAD_HANDLER": "utils.jwt.jwt_create_payload",
     "JWT_AUTH_COOKIE": "jwt_token",
-    "JWT_AUTH_COOKIE_SAMESITE": "None",
+    "JWT_AUTH_COOKIE_SAMESITE": None,
+    "JWT_AUTH_COOKIE_DOMAIN": env.str("DJANGO_JWT_AUTH_COOKIE_DOMAIN", None),
+    "JWT_ISSUER": BASE_BACKEND_URL,
 }
 
 
@@ -219,7 +220,13 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = env.list(
     "DJANGO_CORS_ORIGIN_WHITELIST", default=[BASE_FRONTEND_URL]
 )
+SESSION_COOKIE_SAMESITE = None
+CRSF_COOKIE_SAMESITE = None
 
 # Google OAuth2 settings
 GOOGLE_OAUTH2_CLIENT_ID = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_ID", "")
 GOOGLE_OAUTH2_CLIENT_SECRET = env.str("DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET", "")
+
+# Stripe
+STRIPE_API_KEY = env.str("DJANGO_STRIPE_API_KEY", "")
+STRIPE_DEFAULT_PRICING = env.str("DJANGO_STRIPE_DEFAULT_PRICING", "")

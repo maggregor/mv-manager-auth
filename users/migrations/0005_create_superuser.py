@@ -13,6 +13,7 @@ from users.services import user_create_superuser
 import google.auth
 from google.cloud import secretmanager
 
+
 def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> None:
     """
     Dynamically create an admin user as part of a migration
@@ -21,7 +22,7 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
     if os.getenv("TRAMPOLINE_CI", None):
         # We are in CI, so just create a placeholder user for unit testing.
         admin_password = "test"
-    else:
+    elif os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
         client = secretmanager.SecretManagerServiceClient()
 
         # Get project value for identifying current context
@@ -33,20 +34,22 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
         admin_password = client.access_secret_version(name=name).payload.data.decode(
             "UTF-8"
         )
+    else:
+        admin_password = "admin"
 
     # Create a new user using acquired password, stripping any accidentally stored newline characters
-    user_create_superuser(
-    email='admin@achilio.com',
-    password=admin_password.strip(),
-    access_token="none",
-    refresh_token="none"
-)
+    # user_create_superuser(
+    #     email="admin@achilio.com",
+    #     password=admin_password.strip(),
+    #     access_token="none",
+    #     refresh_token="none",
+    # )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_user_access_token'),
+        ("users", "0004_user_access_token"),
     ]
 
     operations = [migrations.RunPython(createsuperuser)]

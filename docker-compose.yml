@@ -6,12 +6,17 @@ services:
     build: .
     restart: always
     ports:
-      - 8000:8000
+      - "8000:8000"
     environment:
       - DJANGO_GOOGLE_OAUTH2_CLIENT_ID=293325499254-8h7bv5piflnjdoufjak8jjh03tpqss8b.apps.googleusercontent.com
       - DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET=OZeUkdunGSTQ7ZyvM7oDtabD
       - DJANGO_SECRET_KEY=secret
-      #- DJANGO_BASE_BACKEND_URL="http://auth.achilio.com"
-      #- DJANGO_BASE_FRONTEND_URL="https://app.achilio.com"
+      - DJANGO_STRIPE_API_KEY="sk_test_51I8oL1Kz3TV8XBbdgPtkPKW1Mh3qrWfC13TbJBUQND9rWNvtyTT3wVssVYbgDteA5xTpzE5XEM9IfAXWQLZZJWPw00ljma7GOR"
+      - DJANGO_STRIPE_DEFAULT_PRICING="price_1Kjv1nKz3TV8XBbdIXryTcLk"
+      - PORT=8000
+      - SECRET_KEY=secret
+      - GS_BUCKET_NAME="achilio-dev_auth-django-storage"
+      - DATABASE_URL=sqlite:///db.sqlite
     volumes:
       - .:/app
+    entrypoint: ./entrypoint-local.sh
