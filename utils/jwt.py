@@ -36,6 +36,7 @@ def jwt_create_payload(user: User):
         "customer_id": user.team.stripe_customer_id,
         "iat": unix_epoch(issued_at_time),
         "exp": expiration_time,
+        "roles": ["ROLE_ADMIN" if user.team.name == "achilio.com" else "ROLE_USER"],
     }
 
     if api_settings.JWT_TOKEN_ID != "off":

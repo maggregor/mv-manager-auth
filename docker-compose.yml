@@ -11,12 +11,13 @@ services:
       - DJANGO_GOOGLE_OAUTH2_CLIENT_ID=293325499254-8h7bv5piflnjdoufjak8jjh03tpqss8b.apps.googleusercontent.com
       - DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET=OZeUkdunGSTQ7ZyvM7oDtabD
       - DJANGO_SECRET_KEY=secret
-      - DJANGO_STRIPE_API_KEY="sk_test_51I8oL1Kz3TV8XBbdgPtkPKW1Mh3qrWfC13TbJBUQND9rWNvtyTT3wVssVYbgDteA5xTpzE5XEM9IfAXWQLZZJWPw00ljma7GOR"
-      - DJANGO_STRIPE_DEFAULT_PRICING="price_1Kjv1nKz3TV8XBbdIXryTcLk"
+      - DJANGO_STRIPE_API_KEY=sk_test_51I8oL1Kz3TV8XBbdgPtkPKW1Mh3qrWfC13TbJBUQND9rWNvtyTT3wVssVYbgDteA5xTpzE5XEM9IfAXWQLZZJWPw00ljma7GOR
+      - DJANGO_STRIPE_DEFAULT_PRICING=price_1Kjv1nKz3TV8XBbdIXryTcLk
       - PORT=8000
       - SECRET_KEY=secret
-      - GS_BUCKET_NAME="achilio-dev_auth-django-storage"
+      - GS_BUCKET_NAME=achilio-dev_auth-django-storage
       - DATABASE_URL=sqlite:///db.sqlite
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/achilio-dev-54f5d9e6e095.json
     volumes:
       - .:/app
     entrypoint: ./entrypoint-local.sh
