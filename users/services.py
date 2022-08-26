@@ -122,7 +122,7 @@ def team_create(*, name: str, **extra_fields) -> Team:
     # Billing start the last day of current month
     billing_cycle_anchor = int(
         (
-            today.replace(month=today.month + 1).replace(day=1) - timedelta(days=1)
+            today.replace(month=today.month + 2).replace(day=1) - timedelta(days=1)
         ).timestamp()
     )
     subscription = stripe.Subscription.create(
